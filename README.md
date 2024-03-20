@@ -48,6 +48,13 @@ fileServer <- new("server", baseURL = "127.0.0.1",
 
 srv <- initServer(fileServer, force = TRUE)
 
+#Example 1
+x <- (1:1000)*2*pi/1000 - pi
+
+nmrium <- exportReIm(x, cos(x), sin(x), output=NA, observeFrequency=400.08247065777, dataType='NMR SPECTRUM', solvent='H2O', nucleus='1H', PHC0=0, PHC1=0, col='blue', name="cos(x) + i*sin(x)")
+nmriumView(nmrium, fileServer, name = "example", title = "A new title", openBrowser=TRUE)
+
+Example 2
 x <- (1:1000)*2*pi/1000 - pi
 
 nmrium <- exportReIm(x, sin(x)+1, NULL, output=NA, observeFrequency=400.08247065777, dataType='NMR SPECTRUM', solvent='H2O', nucleus='1H', PHC0=0, PHC1=0, col='blue', name="sin(x)+1")
