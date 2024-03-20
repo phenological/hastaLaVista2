@@ -1,0 +1,153 @@
+---
+title: "BA shift fitting"
+date: "Created: 2023-07-27 <br> Last Updated: `r format(Sys.Date(), format = '%d %B %Y')`"
+output: 
+  html_document: 
+    fig_caption: yes
+    highlight: tango
+    keep_md: yes
+    toc: yes
+    toc_float: yes
+    self_contained: no
+    code_folding: hide
+    css: style.css
+    toc_depth: 4
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      fig.width = 8,
+                      fig.height = 6,
+                      warning = FALSE)
+```
+
+## Utilities
+
+Source libraries
+
+```{r lib}
+#install.packages('gbm') 
+#install.packages('caret')
+#install.packages(c('neuralnet','keras','tensorflow'),dependencies = T)
+
+library(gsignal)
+library(ggplot2)
+library(patchwork)
+library(RColorBrewer)
+library(colorRamps)
+library(zeallot)
+library(minpack.lm)
+library(jsonlite)
+library(plotly)
+library(gbm)
+library(caret)
+library(pracma)
+library(neuralnet)
+library(stringr)
+library(NMF)
+library(V8)
+library(hastaLaVista2)
+
+library(fusion)
+```
+
+
+Simulate the NMR patterns
+
+```{r}
+
+ct2 <- v8()
+ct2$source("vignettes/libjs/nmr-simulation.bundle.js")
+
+simulate1D <- function(ids, atomLabels, nbAtoms, chemicalShifts, couplingConstants, options1H, ctx, couplingsIndex=TRUE) {
+ jc <- matrix(data=0, nrow=length(ids), ncol=length(ids))
+ 
+ if (!couplingsIndex) { # We assume that couplings are specified by ids, and not by indexes
+   for (i in 1:length(couplingConstants)) {
+     couplingConstants[[i]][[1]] <- which(ids == couplingConstants[[i]][[1]]) 
+     couplingConstants[[i]][[2]] <- which(ids == couplingConstants[[i]][[2]]) 
+   }
+ }
+ # We assume that couplings are now specified using array index
+ for (j in couplingConstants) {
+   j <- as.numeric(j)
+   jc[j[[1]], j[[2]]] <- j[[3]]
+   jc[j[[2]], j[[1]]] <- j[[3]]
+ }
+ 
+ ctx$assign("couplingConstants", jc)
+ ctx$assign("chemicalShifts", chemicalShifts)
+ ctx$assign("options1H", options1H)
+ script <- " var spinSystem = new global.nmrSimulation.SpinSystem(chemicalShifts, new global.Matrix(couplingConstants), chemicalShifts.map(()=>2));
+             spinSystem.ensureClusterSize(options1H);
+             var spectrum = global.nmrSimulation.simulate1D(spinSystem, options1H);"
+ ctx$eval(script)
+ x <- ctx$get("spectrum.x")
+ y <- ctx$get("spectrum.y")
+ 
+ return (list(x=x, y=y))
+}
+```
+
+Attempt to fit the parameters to the experimental samples of Apple Juice
+
+```{r}
+# D-Fructose
+ids <-               c("H-1", "H-1'", "H-3", "H-4", "H-5", "H-6", "H-6'")
+atomLabels <-        c("H", "H", "H", "H", "H", "H", "H")
+
+# NMR Setup
+options1H <- list(frequency=400.082470657773, from=3.4, to=4.2, lineWidth=2.7, nbPoints=16*1024, maxClusterSize=9, output='xy')
+
+#Beta-Pyranose at 20 Celsius deg.
+chemicalShifts <-    c(3.6991, 3.553, 3.7826, 3.88253, 3.9875, 4.0085, 3.6966)
+couplingConstants <- list(c("H-1", "H-1'", 11.69),
+                       c("H-3", "H-4", 10.03),
+                       c("H-4", "H-5", 3.5),
+                       c("H-5", "H-6", 1.33),
+                       c("H-5", "H-6'", 1.32),
+                       c("H-6", "H-6'", 12.2))
+c1 <- 1 / 3200
+sp1 <- simulate1D(ids, atomLabels, nbAtoms, chemicalShifts, couplingConstants, options1H, ct2, FALSE)
+#Beta-Furanose at 20 Celsius deg.
+chemicalShifts <-    c(3.5835, 3.54506, 4.095, 4.0978, 3.85, 3.79, 3.6685) 
+couplingConstants <- list(c("H-1", "H-1'", 12.05),
+                       c("H-3", "H-4", 8.05),
+                       c("H-4", "H-5", 6.6),
+                       c("H-5", "H-6", 2.98),
+                       c("H-5", "H-6'", 5.91),
+                       c("H-6", "H-6'", 13.10))
+c2 <- 1 / 10000
+sp2 <- simulate1D(ids, atomLabels, nbAtoms, chemicalShifts, couplingConstants, options1H, ct2, FALSE)
+
+plot(sp1$x, sp1$y * c1, type='l', col = 'blue')
+lines(sp2$x, sp2$y * c2, type='l', col = '#009A09')
+lines(sp2$x, sp1$y * c1 + sp2$y * c2, type='l', col = '#AA00AA')
+title("beta-pyranose, beta-furanose 20C")
+
+```
+
+Save on NMRIum
+
+```{r}
+#devtools::install_local("/Users/andres/Documents/git/github/phenological/hastaLaVista2", force=TRUE)
+library(hastaLaVista2)
+
+
+fileServer <- new("server", baseURL = "127.0.0.1",
+             port = 7789,
+             path = "/",
+             protocole = "http://",
+             rootDir = "./nmrium",
+             init = TRUE)
+
+srv <- initServer(fileServer, force = TRUE)
+```
+
+```{r}
+nmrium <- exportReIm(sp1$x,sp1$y / 4000, NULL, output=NA, observeFrequency=400.08247065777, dataType='NMR SPECTRUM', solvent='H2O', nucleus='1H', PHC0=0, PHC1=0, col='blue', name="Beta-Pyranose")
+nmrium <- exportReIm(sp1$x, sp2$y/12000, NULL, output=nmrium, observeFrequency=400.08247065777, dataType='NMR SPECTRUM', solvent='H2O', nucleus='1H', PHC0=0, PHC1=0, col='#009A09', name="Beta-Furanose")
+nmriumView(nmrium, fileServer, name = "ccc", title = "A new title", openBrowser=TRUE)
+```
