@@ -24,6 +24,13 @@ Make sure that *devtools* package is installed and run the following command in 
 
     options(timeout=1000)
     devtools::install_github("phenological/hastaLaVista2")
+    
+## Configure Brave to allow localhost connections from nmrium
+
+brave://flags/#brave-localhost-access-permission
+brave://settings/privacy
+Allow nmrium to access localhost
+
 
 ## Example
 
