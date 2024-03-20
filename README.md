@@ -25,4 +25,24 @@ Make sure that *devtools* package is installed and run the following command in 
     options(timeout=1000)
     devtools::install_github("phenological/hastaLaVista2")
 
-## post-installation
+## Example
+
+```{R}
+library(hastaLaVista2)
+
+
+fileServer <- new("server", baseURL = "127.0.0.1",
+             port = 7789,
+             path = "/",
+             protocole = "http://",
+             rootDir = "./nmrium",
+             init = TRUE)
+
+srv <- initServer(fileServer, force = TRUE)
+
+x <- 1:100
+
+nmrium <- exportReIm(x, x*2 NULL, output=NA, observeFrequency=400.08247065777, dataType='NMR SPECTRUM', solvent='H2O', nucleus='1H', PHC0=0, PHC1=0, col='blue', name="x*2")
+nmrium <- exportReIm(x, (50 - x) * 2, NULL, output=nmrium, observeFrequency=400.08247065777, dataType='NMR SPECTRUM', solvent='H2O', nucleus='1H', PHC0=0, PHC1=0, col='#009A09', name="(x - 50) * 2")
+nmriumView(nmrium, fileServer, name = "example", title = "A new title", openBrowser=TRUE)
+```
