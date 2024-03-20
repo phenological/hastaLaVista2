@@ -1,4 +1,6 @@
-#' Method for exporting spectra information into the NMRium format. You can use this to export simple x, re and x, re and im spectra
+#' Method for exporting spectra information into the NMRium format. 
+#' 
+#' You can use this to export simple x, re and x, re and im spectra
 #' If you provide a list containing NMRium data, it will append the new spectra data into the proper place, 
 #' so that you can get an overlay of several spectra into the platform. 
 #'
@@ -22,7 +24,9 @@ nmriumView <- function(nmriumData, srv, name="default", title="exported from R",
     utils::browseURL( paste0(nmriumURL, "=", fileServer, tocFile ), browser = "open")
 }
 
-#' Method for exporting spectra information into the NMRium format. You can use this to export simple x, re and x, re and im spectra
+#' Method for exporting table of content containing spectra information into the NMRium format. 
+#' 
+#' You can use this to export simple x, re and x, re and im spectra
 #' If you provide a list containing NMRium data, it will append the new spectra data into the proper place, 
 #' so that you can get an overlay of several spectra into the platform. 
 #'
