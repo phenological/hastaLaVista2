@@ -28,6 +28,7 @@ Make sure that *devtools* package is installed and run the following command in 
 ## Example
 
 ```{R}
+#devtools::install_github("phenological/hastaLaVista2")
 library(hastaLaVista2)
 
 
