@@ -1,0 +1,32 @@
+Package: hastaLaVista2
+Type: Package
+Title: visualize metabolomics data interactively
+Version: 0.0.1
+Authors@R: person(given = "Julien",
+           family = "Wist",
+           role = c("aut", "cre"),
+           email = "julien.wist@correounivalle.edu.co",
+           comment = c(ORCID = "0000-0002-3416-2572"))
+Description: To connect R results to https://github.com/cheminfo/nmrium project using https://www.nmrium.org/nmrium.
+    This allows to interactively display NMR and Mass spectra into the browser.
+    R is a powerfull software for data analysis, however it lacks the possibility to display data in an interactive fashion.
+    For example it is not possible to display a spectra and zoom in and out. With this package we offer the possibility apply nmr
+    analysis in the browser, like, phase correctoin, peak picking, integration and assignment. 
+Depends: R (>= 3.1.0)
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+LazyDataCompression: none
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Imports:
+    jsonlite (>= 1.5),
+    methods,
+    httpuv
+Suggests:
+    testthat,
+    covr,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+StagedInstall: no

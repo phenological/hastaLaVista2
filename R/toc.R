@@ -1,0 +1,3 @@
+addToTOC <- function(currentToc, nmrium) {
+
+}
