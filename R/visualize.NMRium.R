@@ -12,13 +12,13 @@
 #' @param openBrowser It must open the browser to display the TOC?
 #' @return void
 #' @export
-nmriumView <- function(nmriumData, srv, name="default", title="exported from R", nmriumURL="https://www.nmrium.org/nmrium#?toc", openBrowser=TRUE) {
+nmriumView <- function(nmriumData, srv, name="default", title="exported from R", nmriumURL="https://www.nmrium.org/nmrium#?toc", openBrowser=TRUE, digits=12) {
   fileServer <-  paste0(srv@protocole, srv@baseURL, ":", srv@port, srv@path)
   nmriumFile <- paste0(name, ".nmrium")
   fullNMRiumLocalPath <- file.path(srv@rootDir, nmriumFile) 
   tocFile <- paste0(name, ".json")
   fullTocLocalPath <- file.path(srv@rootDir, tocFile) 
-  write(toJSON(nmriumData, pretty = TRUE, auto_unbox = TRUE, digits = 12), file=fullNMRiumLocalPath)
+  write(toJSON(nmriumData, pretty = TRUE, auto_unbox = TRUE, digits = digits), file=fullNMRiumLocalPath)
   write(paste0('[{"file":"', fileServer, nmriumFile, '", "title": "', title, '", "view": "", "selected": true}]'), file=fullTocLocalPath)
   if (openBrowser)
     utils::browseURL( paste0(nmriumURL, "=", fileServer, tocFile ), browser = "open")
