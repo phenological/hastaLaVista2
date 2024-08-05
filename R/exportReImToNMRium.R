@@ -12,15 +12,13 @@
 #' @param dataType Data type format. Use 'NMR FID' if the spectrum is in the time domain (Default 'NMR SPECTRUM')
 #' @param solvent String that specify the solvent. (Default 'UNKNOWN') 
 #' @param nucleus Observe nucleus.  (Default '1H') 
-#' @param PHC0 Phase 0 correction value (Optional, Default 0)
-#' @param PHC1 Phase 1 correction value (Optional, Default 0)
 #' @param col Color for this spectrum (Default black)
-#' @param name Name that will identify the spectrum in NMRium (Default empty)
-
+#' @param meta A named list with elements that you want to include in the spectra meta i.e. PHC0, PHC1. Used for spectra processing
+#' @param info A named list with elements that you want to include in the spectra info. i.e. PHC0, PHC1, name, AGE, SEX, etc. Used for visualization
 #' @return list
 #' @export
 
-exportReIm <- function(x, yr, yi, output=NA, observeFrequency=600, dataType="NMR SPECTRUM", solvent="UNKNOWN", nucleus="1H", PHC0=0, PHC1=0, col="#000000", name="") {
+exportReIm <- function(x, yr, yi, output=NA, observeFrequency=600, dataType="NMR SPECTRUM", solvent="UNKNOWN", nucleus="1H", col="#000000", meta=list(PHC0=0, PHC1=0), info=list()) {
   #print(yr)
   newRe <- fillGapsWith(x, yr, 0)
   yr <- newRe[[2]]
@@ -30,7 +28,7 @@ exportReIm <- function(x, yr, yi, output=NA, observeFrequency=600, dataType="NMR
     yi <-  fillGapsWith(x, yi, 0)[[2]]
   }
   x <-  newRe[[1]]
-  meta <- list("TITLE"="spectra-data from ReIm",
+  meta <- merge_list(meta, list("TITLE"="spectra-data from ReIm",
                "JCAMPDX"="5.00 $$Cheminfo tools 3.4.11",
                "OWNER"="",
                "DATATYPE"="NMR SPECTRUM",
@@ -59,16 +57,11 @@ exportReIm <- function(x, yr, yi, output=NA, observeFrequency=600, dataType="NMR
                "DSPFVS"=0,
                "BF1"=0,
                "SFO1"=observeFrequency,
-               "NUC1"=paste0("<",nucleus,">"),
-               "PHC0"=PHC0,
-               "PHC1"=PHC1)
-  info <- list("nucleus"= nucleus,
-               "isFid"=FALSE,
-               "isComplex"=TRUE,
+               "NUC1"=paste0("<",nucleus,">")))
+  info <- merge_list(info, list("nucleus"= nucleus,
                "dimension"=1,
-               "name"=name,
+               "name"="",
                "isFt"=TRUE,
-               "experiment"="",
                "fnMode"="undefined",
                "title"="spectra-data from ReIm",
                "solvent"=solvent,
@@ -78,20 +71,14 @@ exportReIm <- function(x, yr, yi, output=NA, observeFrequency=600, dataType="NMR
                "lastX"=x[[length(x)]],
                "numberOfPoints"=length(x),
                "originFrequency"=observeFrequency,
-               "baseFrequency"=0,
-               "fieldStrength"=0,
                "spectralWidth"=(x[[length(x)]] - x[[1]]),
                "acquisitionTime"=length(x)/(2*observeFrequency*(x[[length(x)]] - x[[1]])),
                "groupDelay"=0,
-               "DECIM"=0,
-               "DSPFVS"=0,
                "increment"=(x[[length(x)]] - x[[1]]) / (length(x) - 1),
-               "frequencyOffset"=observeFrequency*1e6,              
-               "PHC0"=PHC0,
-               "PHC1"=PHC1)
+               "frequencyOffset"=observeFrequency*1e6))
   
   data <- list("x"=x, "re"=yr, "im"=yi)
-  display <- list("color"=col, "isPeaksMarkersVisible"=TRUE, "isRealSpectrumVisible"=TRUE,"isVisible"=TRUE, "isVisibleInDomain"=TRUE)
+  display <- list("color"=col, "isPeaksMarkersVisible"=TRUE, "isRealSpectrumVisible"=TRUE, "isVisible"=TRUE, "isVisibleInDomain"=TRUE)
   
   if(all(is.na(output))) {
     return (list("version"=4, "data"=list("spectra"=list(list("data"=data, "meta"=meta, "info"=info, "display"=display)))))
@@ -101,6 +88,20 @@ exportReIm <- function(x, yr, yi, output=NA, observeFrequency=600, dataType="NMR
   }
 }
 
+#' Merge 2 named list into a single one. The first one is the template, the second one contain the optional modifications
+#'
+#' @param la A named list
+#' @param lb A second named list
+#' @return A named list with all the unique names in la and lb, with the values of la preferably.
+#' @export
+
+merge_list <- function(la, lb) {
+  for(i in names(la)) {
+    lb[[i]] = la[[i]]
+  }
+  return(lb)
+}
+
 #' Given a f(x) -> y, with x being a progression of real numbers, with the same delta on its domain, except for some gaps in the middle
 #' this function returns a new pair of x2 and y2 such that all pairs in x,y are contained and x2 is a monotonic progression of real numbers
 #' i.e a series of equally spaced data on x, with all the gaps filled with the given value.
@@ -108,8 +109,6 @@ exportReIm <- function(x, yr, yi, output=NA, observeFrequency=600, dataType="NMR
 #' @param x Independent variable
 #' @param y Dependent variable
 #' @param value A value to fill the gaps on y
-
-
 #' @return list(newX, newY)
 #' @export
 

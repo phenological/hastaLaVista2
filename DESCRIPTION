@@ -1,7 +1,7 @@
 Package: hastaLaVista2
 Type: Package
 Title: visualize metabolomics data interactively
-Version: 0.0.2
+Version: 0.1.0
 Authors@R: person(given = "Julien",
            family = "Wist",
            role = c("aut", "cre"),
