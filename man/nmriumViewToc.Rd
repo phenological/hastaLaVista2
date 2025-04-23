@@ -2,9 +2,7 @@
 % Please edit documentation in R/visualize.NMRium.R
 \name{nmriumViewToc}
 \alias{nmriumViewToc}
-\title{Method for exporting spectra information into the NMRium format. You can use this to export simple x, re and x, re and im spectra
-If you provide a list containing NMRium data, it will append the new spectra data into the proper place,
-so that you can get an overlay of several spectra into the platform.}
+\title{Method for exporting table of content containing spectra information into the NMRium format.}
 \usage{
 nmriumViewToc(
   toc,
@@ -29,7 +27,7 @@ nmriumViewToc(
 void
 }
 \description{
-Method for exporting spectra information into the NMRium format. You can use this to export simple x, re and x, re and im spectra
+You can use this to export simple x, re and x, re and im spectra
 If you provide a list containing NMRium data, it will append the new spectra data into the proper place,
 so that you can get an overlay of several spectra into the platform.
 }

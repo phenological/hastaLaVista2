@@ -11,7 +11,9 @@
 #' @param nmriumURL The NMRium instance
 #' @param openBrowser It must open the browser to display the TOC?
 #' @return void
+#' @importFrom jsonlite toJSON
 #' @export
+
 nmriumView <- function(nmriumData, srv, name="default", title="exported from R", nmriumURL="https://www.nmrium.org/nmrium#?toc", openBrowser=TRUE, digits=12) {
   fileServer <-  paste0(srv@protocole, srv@baseURL, ":", srv@port, srv@path)
   nmriumFile <- paste0(name, ".nmrium")
@@ -36,8 +38,8 @@ nmriumView <- function(nmriumData, srv, name="default", title="exported from R",
 #' @param nmriumURL The NMRium instance
 #' @param openBrowser It must open the browser to display the TOC?
 #' @return void
+#' @importFrom jsonlite toJSON
 #' @export
-#' 
 nmriumViewToc <- function(toc, srv, name="toc_view", nmriumURL="https://www.nmrium.org/nmrium#?toc", openBrowser=TRUE) {
   # Create a new path to store the files associated with this toc
   tocPath <-file.path(srv@rootDir, name)

@@ -2,9 +2,7 @@
 % Please edit documentation in R/exportReImToNMRium.R
 \name{exportReIm}
 \alias{exportReIm}
-\title{Method for exporting spectra information into the NMRium format. You can use this to export simple x, re and x, re and im spectra
-If you provide a list containing NMRium data, it will append the new spectra data into the proper place,
-so that you can get an overlay of several spectra into the platform.}
+\title{Method for exporting spectra information into the NMRium format.}
 \usage{
 exportReIm(
   x,
@@ -15,10 +13,9 @@ exportReIm(
   dataType = "NMR SPECTRUM",
   solvent = "UNKNOWN",
   nucleus = "1H",
-  PHC0 = 0,
-  PHC1 = 0,
   col = "#000000",
-  name = ""
+  meta = list(PHC0 = 0, PHC1 = 0),
+  info = list()
 )
 }
 \arguments{
@@ -38,19 +35,17 @@ exportReIm(
 
 \item{nucleus}{Observe nucleus.  (Default '1H')}
 
-\item{PHC0}{Phase 0 correction value (Optional, Default 0)}
-
-\item{PHC1}{Phase 1 correction value (Optional, Default 0)}
-
 \item{col}{Color for this spectrum (Default black)}
 
-\item{name}{Name that will identify the spectrum in NMRium (Default empty)}
+\item{meta}{A named list with elements that you want to include in the spectra meta i.e. PHC0, PHC1. Used for spectra processing}
+
+\item{info}{A named list with elements that you want to include in the spectra info. i.e. PHC0, PHC1, name, AGE, SEX, etc. Used for visualization}
 }
 \value{
 list
 }
 \description{
-Method for exporting spectra information into the NMRium format. You can use this to export simple x, re and x, re and im spectra
+You can use this to export simple x, re and x, re and im spectra
 If you provide a list containing NMRium data, it will append the new spectra data into the proper place,
 so that you can get an overlay of several spectra into the platform.
 }

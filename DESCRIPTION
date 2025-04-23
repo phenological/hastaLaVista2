@@ -1,7 +1,7 @@
 Package: hastaLaVista2
 Type: Package
 Title: visualize metabolomics data interactively
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: person(given = "Julien",
            family = "Wist",
            role = c("aut", "cre"),
@@ -18,7 +18,6 @@ Encoding: UTF-8
 LazyData: true
 LazyDataCompression: none
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
 Imports:
     jsonlite (>= 1.5),
     methods,
@@ -30,3 +29,4 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 StagedInstall: no
+RoxygenNote: 7.3.2

@@ -2,9 +2,7 @@
 % Please edit documentation in R/visualize.NMRium.R
 \name{nmriumView}
 \alias{nmriumView}
-\title{Method for exporting spectra information into the NMRium format. You can use this to export simple x, re and x, re and im spectra
-If you provide a list containing NMRium data, it will append the new spectra data into the proper place,
-so that you can get an overlay of several spectra into the platform.}
+\title{Method for exporting spectra information into the NMRium format.}
 \usage{
 nmriumView(
   nmriumData,
@@ -12,7 +10,8 @@ nmriumView(
   name = "default",
   title = "exported from R",
   nmriumURL = "https://www.nmrium.org/nmrium#?toc",
-  openBrowser = TRUE
+  openBrowser = TRUE,
+  digits = 12
 )
 }
 \arguments{
@@ -32,7 +31,7 @@ nmriumView(
 void
 }
 \description{
-Method for exporting spectra information into the NMRium format. You can use this to export simple x, re and x, re and im spectra
+You can use this to export simple x, re and x, re and im spectra
 If you provide a list containing NMRium data, it will append the new spectra data into the proper place,
 so that you can get an overlay of several spectra into the platform.
 }
