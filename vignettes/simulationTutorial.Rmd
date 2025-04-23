@@ -151,3 +151,21 @@ nmrium <- exportReIm(sp1$x,sp1$y / 4000, NULL, output=NA, observeFrequency=400.0
 nmrium <- exportReIm(sp1$x, sp2$y/12000, NULL, output=nmrium, observeFrequency=400.08247065777, dataType='NMR SPECTRUM', solvent='H2O', nucleus='1H', PHC0=0, PHC1=0, col='#009A09', name="Beta-Furanose")
 nmriumView(nmrium, fileServer, name = "ccc", title = "A new title", openBrowser=TRUE)
 ```
+
+
+```{r}
+ca <- data.frame(
+  x = rep(1:10, 3),
+  y = c(runif(10), runif(10), runif(10)),
+  series = rep(c("A", "B", "C"), each = 10)
+  ,w = as.numeric(c(sample(1:10,10),sample(1:10,10),sample(1:10,10)))
+)
+
+ca$y[11:20] <- ca$y[11:20] + max(ca$y[1:10])
+ca$y[21:30] <- ca$y[21:30] + max(ca$y[11:10])
+
+# Create the ggplot
+ggplot(ca, aes(x = x, y = y, group = series,color=w)) +
+  geom_line() + scale_color_gradientn(colors=matlab.like2((10)))
+```
+

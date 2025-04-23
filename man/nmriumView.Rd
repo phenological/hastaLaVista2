@@ -26,6 +26,8 @@ nmriumView(
 \item{nmriumURL}{The NMRium instance}
 
 \item{openBrowser}{It must open the browser to display the TOC?}
+
+\item{digits, }{numeric, precision of the exported nmr matrix}
 }
 \value{
 void

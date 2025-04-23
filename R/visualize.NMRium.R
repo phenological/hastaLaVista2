@@ -10,6 +10,7 @@
 #' @param title String to identify the element in NMRium
 #' @param nmriumURL The NMRium instance
 #' @param openBrowser It must open the browser to display the TOC?
+#' @param digits, numeric, precision of the exported nmr matrix
 #' @return void
 #' @importFrom jsonlite toJSON
 #' @export
